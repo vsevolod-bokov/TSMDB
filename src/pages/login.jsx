@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
 import { useAuth } from "@/contexts/AuthContext"
+import movieBg from "@/assets/movie background.png"
 
 export default function Login() {
   const [email, setEmail] = useState("")
@@ -28,8 +29,10 @@ export default function Login() {
   }
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-gray-950 via-gray-900 to-gray-800">
-      <div className="flex flex-col items-center gap-6">
+    <div className="relative flex items-center justify-center min-h-screen overflow-hidden">
+      <img src={movieBg} alt="" className="absolute inset-0 h-full w-full object-cover" />
+      <div className="absolute inset-0 bg-black/60" />
+      <div className="relative z-10 flex flex-col items-center gap-6">
         <div className="text-center">
           <h1 className="text-4xl font-bold text-white">Welcome to TSMDB</h1>
           <p className="text-muted-foreground mt-2">Your ultimate movie database</p>
