@@ -45,16 +45,18 @@ export default function Navbar() {
           </Link>
           {currentUser && (
             <div className="flex items-center gap-3">
-              {currentUser.photoURL && (
-                <img
-                  src={currentUser.photoURL}
-                  alt="Avatar"
-                  className="size-8 rounded-full border border-muted bg-muted"
-                />
-              )}
-              <span className="text-sm text-muted-foreground hidden sm:inline">
-                {currentUser.displayName}
-              </span>
+              <Link to="/account" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
+                {currentUser.photoURL && (
+                  <img
+                    src={currentUser.photoURL}
+                    alt="Avatar"
+                    className="size-8 rounded-full border border-muted bg-muted"
+                  />
+                )}
+                <span className="text-sm text-muted-foreground hidden sm:inline">
+                  {currentUser.displayName}
+                </span>
+              </Link>
               <Button variant="ghost" size="sm" onClick={handleLogout}>
                 Logout
               </Button>

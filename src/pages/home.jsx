@@ -1,9 +1,9 @@
-import { useCallback, useMemo, useState, useEffect } from "react"
+import { useCallback, useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import Navbar from "@/components/Navbar"
 import MovieRow from "@/components/MovieRow"
 import { Input } from "@/components/ui/input"
-import { getTrending, getPopular, getMoviesByGenre, getImageUrl, GENRES } from "@/services/tmdb"
+import { getTrending, getPopular, getImageUrl } from "@/services/tmdb"
 import { useAuth } from "@/contexts/AuthContext"
 
 export default function Home() {
@@ -22,14 +22,6 @@ export default function Home() {
       }
     })
   }, [])
-
-  const genreFetchers = useMemo(
-    () => GENRES.map((genre) => ({
-      ...genre,
-      fetchFn: () => getMoviesByGenre(genre.id),
-    })),
-    []
-  )
 
   const firstName = currentUser?.displayName?.split(" ")[0] || "Movie Fan"
 
@@ -53,7 +45,7 @@ export default function Home() {
             Welcome back, {firstName}!
           </h1>
           <p className="mt-2 text-lg text-muted-foreground max-w-lg">
-            Discover your next favorite movie. Browse trending films, explore genres, or search for something specific.
+            Discover your next favorite movie. Browse trending films or search for something specific.
           </p>
           <form
             onSubmit={(e) => {
@@ -84,13 +76,6 @@ export default function Home() {
       <main className="mx-auto max-w-7xl space-y-8 py-6">
         <MovieRow title="Trending This Week" fetchFn={fetchTrending} />
         <MovieRow title="Popular" fetchFn={fetchPopular} />
-        {genreFetchers.map((genre) => (
-          <MovieRow
-            key={genre.id}
-            title={genre.name}
-            fetchFn={genre.fetchFn}
-          />
-        ))}
       </main>
     </div>
   )
