@@ -1,17 +1,30 @@
 import { useState } from "react"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
+import { useAuth } from "@/contexts/AuthContext"
 
 export default function Login() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
+  const [error, setError] = useState("")
+  const [loading, setLoading] = useState(false)
+  const { login } = useAuth()
+  const navigate = useNavigate()
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault()
-    console.log("Login:", { email, password })
+    setError("")
+    setLoading(true)
+    try {
+      await login(email, password)
+      navigate("/")
+    } catch (err) {
+      setError("Invalid email or password.")
+    }
+    setLoading(false)
   }
 
   return (
@@ -28,6 +41,9 @@ export default function Login() {
           </CardHeader>
           <form onSubmit={handleSubmit}>
             <CardContent className="flex flex-col gap-4">
+              {error && (
+                <p className="text-sm text-destructive text-center">{error}</p>
+              )}
               <div className="flex flex-col gap-2">
                 <Label htmlFor="email">Email</Label>
                 <Input
@@ -52,7 +68,9 @@ export default function Login() {
               </div>
             </CardContent>
             <CardFooter className="flex flex-col gap-4 pt-4">
-              <Button type="submit" className="w-full">Login</Button>
+              <Button type="submit" className="w-full" disabled={loading}>
+                {loading ? "Signing in..." : "Login"}
+              </Button>
               <p className="text-sm text-muted-foreground text-center">
                 Don't have an account?{" "}
                 <Link to="/account" className="text-primary underline underline-offset-4 hover:text-primary/80">

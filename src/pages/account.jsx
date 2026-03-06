@@ -1,9 +1,10 @@
 import { useState } from "react"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
+import { useAuth } from "@/contexts/AuthContext"
 
 const STYLES = [
   { id: "adventurer", label: "Adventurer" },
@@ -30,6 +31,10 @@ export default function Account() {
   const [selectedStyle, setSelectedStyle] = useState(STYLES[0].id)
   const [selectedSeed, setSelectedSeed] = useState(null)
   const [seeds, setSeeds] = useState(() => generateSeeds(8))
+  const [error, setError] = useState("")
+  const [loading, setLoading] = useState(false)
+  const { register, updateUserProfile } = useAuth()
+  const navigate = useNavigate()
 
   const avatarUrl = getAvatarUrl(selectedStyle, selectedSeed || name || "default")
 
@@ -38,9 +43,21 @@ export default function Account() {
     setSelectedSeed(null)
   }
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault()
-    console.log("Register:", { name, email, password, confirmPassword, avatarUrl })
+    if (password !== confirmPassword) {
+      return setError("Passwords do not match.")
+    }
+    setError("")
+    setLoading(true)
+    try {
+      await register(email, password)
+      await updateUserProfile({ displayName: name, photoURL: avatarUrl })
+      navigate("/")
+    } catch (err) {
+      setError(err.message)
+    }
+    setLoading(false)
   }
 
   return (
@@ -134,6 +151,10 @@ export default function Account() {
                   <p className="text-sm text-muted-foreground">Create a new account to get started.</p>
                 </div>
 
+                {error && (
+                  <p className="text-sm text-destructive text-center">{error}</p>
+                )}
+
                 <div className="flex flex-col gap-2">
                   <Label htmlFor="name">Name</Label>
                   <Input
@@ -179,7 +200,9 @@ export default function Account() {
                   />
                 </div>
 
-                <Button type="submit" className="w-full mt-2">Register</Button>
+                <Button type="submit" className="w-full mt-2" disabled={loading}>
+                  {loading ? "Creating account..." : "Register"}
+                </Button>
                 <p className="text-sm text-muted-foreground text-center">
                   Already have an account?{" "}
                   <Link to="/login" className="text-primary underline underline-offset-4 hover:text-primary/80">
