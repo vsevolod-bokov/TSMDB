@@ -14,12 +14,17 @@ export default function Login() {
   }
 
   return (
-    <div className="flex items-center justify-center min-h-screen">
-      <Card className="w-full max-w-sm">
-        <CardHeader>
-          <CardTitle>Login</CardTitle>
-          <CardDescription>Enter your email and password to sign in.</CardDescription>
-        </CardHeader>
+    <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-gray-950 via-gray-900 to-gray-800">
+      <div className="flex flex-col items-center gap-6">
+        <div className="text-center">
+          <h1 className="text-4xl font-bold text-white">Welcome to TSMDB</h1>
+          <p className="text-muted-foreground mt-2">Your ultimate movie database</p>
+        </div>
+        <Card className="w-full max-w-sm">
+          <CardHeader>
+            <CardTitle>Login</CardTitle>
+            <CardDescription>Enter your email and password to sign in.</CardDescription>
+          </CardHeader>
         <form onSubmit={handleSubmit}>
           <CardContent className="flex flex-col gap-4">
             <div className="flex flex-col gap-2">
@@ -45,11 +50,12 @@ export default function Login() {
               />
             </div>
           </CardContent>
-          <CardFooter>
+          <CardFooter className="pt-4">
             <Button type="submit" className="w-full">Login</Button>
           </CardFooter>
         </form>
       </Card>
+      </div>
     </div>
   )
 }
